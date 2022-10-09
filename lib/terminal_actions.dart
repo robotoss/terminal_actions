@@ -5,7 +5,7 @@ class TerminalActions {
     return TerminalActionsPlatform.instance.getPlatformVersion();
   }
 
-  static Future<bool> initialization() {
+  Future<bool> initialization() {
     return TerminalActionsPlatform.instance.initialization();
   }
 }

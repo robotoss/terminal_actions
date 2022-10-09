@@ -26,4 +26,8 @@ abstract class TerminalActionsPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<bool> initialization() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

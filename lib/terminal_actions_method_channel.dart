@@ -12,13 +12,6 @@ class MethodChannelTerminalActions extends TerminalActionsPlatform {
   final methodChannel = const MethodChannel('terminal_actions');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
-  }
-
-  @override
   Future<bool> initialization() async {
     try {
       if (Platform.isAndroid) {
@@ -29,5 +22,11 @@ class MethodChannelTerminalActions extends TerminalActionsPlatform {
     } catch (ex) {
       return false;
     }
+  }
+
+  @override
+  Future<String?> scan() async {
+    final scanValue = await methodChannel.invokeMethod<String>('scan');
+    return scanValue;
   }
 }

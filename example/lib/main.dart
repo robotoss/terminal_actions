@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:terminal_actions/terminal_actions.dart';
 
 void main() {
@@ -46,7 +45,9 @@ class _MyAppState extends State<MyApp> {
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => terminal.scan().then(
+                (value) => setState(() => scanValue = value),
+              ),
           child: const Icon(Icons.document_scanner),
         ),
       ),

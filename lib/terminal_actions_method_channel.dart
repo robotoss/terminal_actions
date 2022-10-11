@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:terminal_actions/terminal_actions.dart';
 
 import 'terminal_actions_platform_interface.dart';
 
@@ -28,5 +29,20 @@ class MethodChannelTerminalActions extends TerminalActionsPlatform {
   Future<String?> scan() async {
     final scanValue = await methodChannel.invokeMethod<String>('scan');
     return scanValue;
+  }
+
+  @override
+  Future<bool?> printText({
+    required String textToPrint,
+    required PrintTextAlign textAlign,
+  }) async {
+    final value = await methodChannel.invokeMethod<bool>(
+      'printText',
+      {
+        "textToPrint": textToPrint,
+        "textAlign": textAlign.value,
+      },
+    );
+    return value;
   }
 }

@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.annotation.NonNull
 import com.qs.wiget.PrintUtils
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -30,13 +29,13 @@ class TerminalActionsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     var mIntent = Intent("ismart.intent.scandown")
     private lateinit var scanBroadcastReceiver: ScanBroadcastReceiver
 
-    override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "terminal_actions")
         channel.setMethodCallHandler(this)
         context = flutterPluginBinding.applicationContext
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
             "init" -> {
                 PrintUtils.initPrintUtils(context)
@@ -49,13 +48,29 @@ class TerminalActionsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 intentFilter.addAction("com.qs.scancode")
                 activity.registerReceiver(scanBroadcastReceiver, intentFilter)
             }
+            "printText" -> {
+                val printText: String = call.argument("textToPrint")!!
+                val align: Int = call.argument("textAlign")!!
+                /**
+                 * Print text
+                 * @param size
+                 * Text size, where 1 is the normal font, 2-bit double width and height font, does
+                 * not support other font sizes
+                 * @param align
+                 * Alignment mode, where 0 is left, 1 is center, 2 is right
+                 * @param text
+                 * Text to be printed
+                 */
+                PrintUtils.printText(1, align, printText)
+                result.success(true)
+            }
             else -> {
                 result.notImplemented()
             }
         }
     }
 
-    override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
     }
 

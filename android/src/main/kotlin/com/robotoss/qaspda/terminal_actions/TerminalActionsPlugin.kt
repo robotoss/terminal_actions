@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.qs.wiget.PrintUtils
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -43,7 +44,7 @@ class TerminalActionsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             "scan" -> {
                 activity.sendBroadcast(mIntent)
-                scanBroadcastReceiver = ScanBroadcastReceiver(result)
+                scanBroadcastReceiver = ScanBroadcastReceiver(result, activity)
                 val intentFilter = IntentFilter()
                 intentFilter.addAction("com.qs.scancode")
                 activity.registerReceiver(scanBroadcastReceiver, intentFilter)
@@ -90,10 +91,15 @@ class TerminalActionsPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         TODO("Not yet implemented")
     }
 
-    internal class ScanBroadcastReceiver(private val result: Result) : BroadcastReceiver() {
+    internal class ScanBroadcastReceiver(
+        private val result: Result,
+        private val activity: Activity
+    ) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val scanData = intent.extras!!.getString("data")
             result.success(scanData)
+            // TODO Auto-generated method stub
+            activity.unregisterReceiver(this)
         }
     }
 }
